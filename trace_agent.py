@@ -45,3 +45,39 @@ def build_agent():
         tools=TOOLS,
         system_prompt=SYSTEM_PROMPT
     )
+
+def main():
+    agent = build_agent()
+
+    print("Ready! Ask the agent something.\n")
+
+    # Track how many messages existed before this turn, so we can slice out
+    # only the new ones (tool calls + final answer) from the returned state
+    prev_message_count = 0
+
+    while True:
+        question = input("You: ").strip()
+        if not question or question.lower() in ["exit", "quit"]:
+            break
+
+        result  = agent.invoke(
+            {"messages": [{"role": "user", "content": question}]}
+        )
+
+        # Only look at messages added during this turn, not the full history
+        new_messages = result["messages"][prev_message_count:]
+
+        for message in new_messages:
+            tool_calls = getattr(message, "tool_calls", None)
+            if tool_calls:
+                for call in tool_calls:
+                    print(f"[tool call] {call['name']}({call['args']})")
+
+        print(f"\nAnswer: {result['messages'][-1].content}\n")
+
+        # Update count for next turn
+        prev_message_count = len(result["messages"])
+
+
+if __name__ == "__main__":
+    main()
