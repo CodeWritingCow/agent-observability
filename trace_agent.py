@@ -35,3 +35,13 @@ def count_words(text: str) -> int:
     return len(text.split())
 
 TOOLS = [get_current_time, count_words]
+
+# ----- Agent -----
+def build_agent():
+    model = ChatOllama(model=CHAT_MODEL, reasoning=False, temperature=0)
+
+    return create_agent(
+        model=model,
+        tools=TOOLS,
+        system_prompt=SYSTEM_PROMPT
+    )
