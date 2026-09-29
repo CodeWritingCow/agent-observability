@@ -60,8 +60,17 @@ def main():
         if not question or question.lower() in ["exit", "quit"]:
             break
 
-        result  = agent.invoke(
-            {"messages": [{"role": "user", "content": question}]}
+        result = agent.invoke(
+            {"messages": [{"role": "user", "content": question}]},
+            
+            config={
+                "tags": ["dev", "local-ollama-agent"],
+                "metadata": {
+                    "environment": "dev",
+                    "agent_name": "local-ollama-agent",
+                    "model": "qwen3"
+                }
+            }
         )
 
         # Only look at messages added during this turn, not the full history
