@@ -4,6 +4,10 @@ from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_ollama import ChatOllama
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 CHAT_MODEL = "qwen3.5:4b"
 
 SYSTEM_PROMPT = (
